@@ -14,7 +14,7 @@ export const VideoPlayer = ({ video, onEnd }: VideoPlayerProps) => {
   return (
     <div>
       <div>
-        <ReactPlayer height="390" width="640" url={`https://www.youtube.com/watch?v=${video.id}`} onEnded={onEnd}/>
+        <ReactPlayer playing controls height="390px" width="640px" url={`https://www.youtube.com/watch?v=${video.id}`} onEnded={onEnd}/>
       </div>
       <div>
         <h4>{video.snippet.title}</h4>
