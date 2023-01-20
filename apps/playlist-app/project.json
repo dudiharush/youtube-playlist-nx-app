@@ -51,7 +51,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "playlist-app:build",
-        "hmr": true
+        "hmr": true,
+        "proxyConfig": "apps/playlist-app/proxy.conf.json"
       },
       "configurations": {
         "development": {
