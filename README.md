@@ -2,7 +2,7 @@
 
 installation steps:
 
-1. add your youtube api key to: apps\playlist-apps\src\keys.ts in "EnterKeyHere".
+1. add your youtube api key to: apps\playlist-app\src\keys.ts in "EnterKeyHere".
 
 2. run npm install from the project directory.
 
