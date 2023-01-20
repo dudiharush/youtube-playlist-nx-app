@@ -16,3 +16,5 @@ installation steps:
 
 - Reorder playlist with drag and drop.
 
+- Auto syncs playlist state across browser tabs
+
