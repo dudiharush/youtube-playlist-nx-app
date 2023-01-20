@@ -9,3 +9,10 @@ installation steps:
 3. run "npm start" from the project root directory.
 
 4. open the browser at: http://localhost:4200/
+
+# App Features
+
+- Add / Remove youtube videos.
+
+- Reorder playlist with drag and drop.
+
