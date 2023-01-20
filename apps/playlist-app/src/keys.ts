@@ -1,1 +1,1 @@
-export const YOUTUBE_API_KEY = "ENTER YOUR KEY HERE";
+export const YOUTUBE_API_KEY = "ENTER KEY HERE";
