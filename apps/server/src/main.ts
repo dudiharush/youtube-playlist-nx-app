@@ -1,67 +1,34 @@
-import * as express from "express";
-import * as bodyParser from "body-parser";
-import * as http from "http";
-import * as path from "path";
-import { Server } from "socket.io";
-import * as cors from "cors";
-import * as fs from "fs";
+import * as express from 'express';
+import * as bodyParser from 'body-parser';
+import * as http from 'http';
+import { Server } from 'socket.io';
+import * as cors from 'cors';
 
 import {
   VideoNodeMap,
   PlaylistData,
-  PositionType
-} from "@youtube-playlist-nx-app/shared/video-types";
+  PositionType,
+} from '@youtube-playlist-nx-app/shared/video-types';
 
-import { fromNodes } from "linked-list-normalized";
+import { fromNodes } from 'linked-list-normalized';
+import { loadData, storeData } from './database';
 
 const app = express();
 app.use(cors());
-app.use(express.static("assets"));
+app.use(express.static('assets'));
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
-    extended: true
+    extended: true,
   })
 );
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
-    methods: ['GET', 'PUT', 'POST']
-  }
+    origin: '*',
+    methods: ['GET', 'PUT', 'POST'],
+  },
 });
-
-
-const playlistPath = path.join(__dirname, "assets", "playlist.json");
-
-const storeData = (videoMap: VideoNodeMap) => {
-  try {
-    fs.writeFileSync(playlistPath, JSON.stringify(videoMap));
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-const loadData = () => {
-  let data = {};
-  try {
-    if (fs.existsSync(playlistPath)) {
-      data = JSON.parse(fs.readFileSync(playlistPath, "utf8"));
-    }
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
-  return data;
-};
-
-io.on("connection", socket => {
-  console.log("New client connected");
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
-  });
-});
-
 
 const playlist: VideoNodeMap = loadData() || {};
 
@@ -71,52 +38,44 @@ app.patch<{
   positionType: PositionType;
   sourceNodeId: string;
   targetNodeId: string;
-} >("/playlist", function(req, res) {
-  if (req.body.op === "add") {
+}>('/playlist', function (req, res) {
+  if (req.body.op === 'add') {
     linkedList.addNode({ videoId: req.query.videoId as string });
-  } else if (req.body.op === "remove") {
+  } else if (req.body.op === 'remove') {
     linkedList.removeNode(req.query.nodeId as string);
-  } else if (req.body.op === "move") {
-    const {
-      sourceNodeId,
-      targetNodeId,
-      positionType
-    } = req.query;
-    if (positionType === "before") {
+  } else if (req.body.op === 'move') {
+    const { sourceNodeId, targetNodeId, positionType } = req.query;
+    if (positionType === 'before') {
       linkedList.moveNodeBefore({
         sourceNodeId: sourceNodeId as string,
-        beforeNodeId: targetNodeId as string
+        beforeNodeId: targetNodeId as string,
       });
     } else {
       linkedList.moveNodeAfter({
         sourceNodeId: sourceNodeId as string,
-        afterNodeId: targetNodeId as string
+        afterNodeId: targetNodeId as string,
       });
     }
   }
 
   storeData(linkedList.getNodes());
-  io.emit("dataChanged", {
+  io.emit('dataChanged', {
     nodes: linkedList.getNodes(),
-    headId: linkedList.getHeadId()
+    headId: linkedList.getHeadId(),
   } as PlaylistData);
   res.send();
 });
 
-app.get("/playlist", function(req, res) {
+app.get('/playlist', function (req, res) {
   res.send({
     nodes: playlist,
-    headId: linkedList.getHeadId()
+    headId: linkedList.getHeadId(),
   } as PlaylistData);
-});
-
-app.get('/api', (req, res) => {
-  res.send({ message: 'Welcome to server!' });
 });
 
 const port = 3000;
 const server = httpServer.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`);
+  console.log(`Listening at http://localhost:${port}/playlist`);
 });
 
 server.on('error', console.error);
