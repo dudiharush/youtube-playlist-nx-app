@@ -1,9 +1,9 @@
-import React from "react";
-import { PlaylistContainerStyled } from "./Playlist.styled";
-import { VideoDataMap } from "../../apiService/apiService";
-import { List } from "react-movable";
-import { PlaylistItem } from "./PlaylistItem";
-import { VideoNode } from "@youtube-playlist-nx-app/shared/video-types";
+import React from 'react';
+import { PlaylistContainerStyled } from './Playlist.styled';
+import { VideoDataMap } from '../../apiService/apiService';
+import { List } from 'react-movable';
+import { PlaylistItem } from './PlaylistItem';
+import { VideoNode } from '@youtube-playlist-nx-app/shared/video-types';
 
 interface PlayListProps {
   videos: VideoDataMap;
@@ -36,6 +36,7 @@ export const Playlist = ({
       renderItem={({ value: videoItem, props }) => (
         <div {...props}>
           <PlaylistItem
+            key={videoItem.id}
             video={videos[videoItem.data.videoId]}
             onVideoSelected={onVideoSelected}
             removeVideo={removeVideo}

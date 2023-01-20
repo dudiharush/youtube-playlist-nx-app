@@ -7,10 +7,9 @@ import { getNodeArray, getVideoIds } from "../utils";
 interface AppState {
     selectedNodeId?: string;
     videos: apiService.VideoDataMap;
-    playlist: PlaylistData;
     playlistArray: VideoNode[];
   }
-  const initState: AppState = { videos: {}, playlist: { nodes: {} }, playlistArray: [] };
+  const initState: AppState = { videos: {}, playlistArray: [] };
 
 export const usePlaylist = () => {
     
@@ -26,13 +25,11 @@ export const usePlaylist = () => {
       if (playlist.headId && appState.selectedNodeId === undefined) {
         setAppState({
           selectedNodeId: playlist.headId,
-          playlist,
           videos,
           playlistArray: getNodeArray(playlist)
         });
       } else {
         setAppState({
-          playlist,
           videos,
           playlistArray: getNodeArray(playlist)
         });
@@ -48,7 +45,6 @@ export const usePlaylist = () => {
       (async () => {
         const { videos, playlist } = await apiService.getPlaylistAndVideos();
         setAppState({
-          playlist,
           videos,
           playlistArray: getNodeArray(playlist),
           selectedNodeId: playlist.headId

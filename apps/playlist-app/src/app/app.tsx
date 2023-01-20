@@ -29,9 +29,9 @@ const App = () => {
   const getSelectedNode = () => {
     const {
       selectedNodeId,
-      playlist: { nodes },
+      playlistArray
     } = appState;
-    return selectedNodeId && nodes[selectedNodeId];
+    return selectedNodeId && playlistArray.find(node=>node.id === selectedNodeId)!
   };
 
   const ALERT_MESSAGE =
